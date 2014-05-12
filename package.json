@@ -1,13 +1,8 @@
 {
   "name": "dpd-s3",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "dependencies": {
     "knox": "0.1.x",
     "formidable": "1.0.x"
-  },
-  "readme": "dpd-s3\n=================\n\nDeployd module for a resource to GET/POST to and from an AWS s3 bucket\n\nThis is based on Ritchie Martori's origin version ( https://github.com/deployd/dpd-s3 ) which was un-published from npm as it didn't work.  Ritchie accepted the pull request with my changes to make it work again, but hasn't ever re-published it.  So I am publishing it as I frequently use it.\n",
-  "readmeFilename": "README.md",
-  "description": "dpd-s3 =================",
-  "_id": "dpd-s3@0.1.0",
-  "_from": "dpd-s3@*"
+  }
 }
