@@ -4,5 +4,8 @@
   "dependencies": {
     "knox": "0.1.x",
     "formidable": "1.0.x"
+  },
+  "devDependencies": {
+    "mocha": "1.20.x"
   }
 }

@@ -101,6 +101,26 @@ S3Bucket.prototype.handle = function (ctx, next) {
       }
       return filename;
     };
+    var replacePath = function(){
+      var path = '';
+      for(var i in Array.prototype.slice.call(arguments)) {
+        var val = arguments[i];
+        if(typeof val==='string'){
+          if(val.slice(0,1)==='/' && path.slice(-1)==='/'){
+            path += val.slice(1);
+          }else if(val.slice(0,1)==='/' || path.slice(-1)==='/'){
+            path += val;
+          }else{
+            path += '/'+val;
+          }
+        }
+      }
+      if(path !== ''){
+        console.log("replaced bucket path: "+path);
+        fullBucketPath = path;
+      }
+      return fullBucketPath;
+    };
 
     form.parse(req)
       .on('file', function(name, file) {
@@ -110,15 +130,11 @@ S3Bucket.prototype.handle = function (ctx, next) {
         lastFile = file;
         var cleanName = cleanseFilename(file.name);
         console.log('cleanName: '+cleanName);
-        if(ctx.url.slice(-1)==='/'){
-          fullBucketPath = ctx.url+cleanName;
-        }else{
-          fullBucketPath = ctx.url+'/'+cleanName;
-        }
+        replacePath(ctx.url, cleanName);
         if (bucket.events.upload) {
-          bucket.events.upload.run(ctx, {url: ctx.url, fileSize: file.size, fileName: ctx.url}, function(err) {
+          bucket.events.upload.run(ctx, {url: ctx.url, fileSize: file.size, fileName: cleanName, basePath: bucket.config.basePath, replacePath: replacePath}, function(err) {
             if (err) return uploadedFile(err);
-            bucket.uploadFile(fullBucketPath, file.size, file.type, fs.createReadStream(file.path), uploadedFile);  
+            bucket.uploadFile(fullBucketPath, file.size, file.type, fs.createReadStream(file.path), uploadedFile);
           });
         } else {
           bucket.uploadFile(fullBucketPath, file.size, file.type, fs.createReadStream(file.path), uploadedFile);
